@@ -1,0 +1,61 @@
+1) Query: List the full names of skilled employees along with their hostel names
+SELECT 
+    se.first_name || ' ' || se.last_name AS full_name,
+    h.hostel_name
+FROM 
+    Skilled_Employee se
+JOIN 
+    Hostel h ON se.hostel_number = h.hostel_number
+ORDER BY 
+    h.hostel_name;
+
+2) Query: List customer names and their total number of orders placed, sorted by total orders descending.
+SELECT 
+    C.customer_name, 
+    COUNT(O.order_id) AS total_orders
+FROM 
+    CUSTOMERS C
+JOIN 
+    ORDERS O ON C.customer_id = O.customer_id
+GROUP BY 
+    C.customer_name
+ORDER BY 
+    total_orders DESC;
+
+3) Query: Display product names that were ordered more than 5 times along with total quantity.
+
+SELECT 
+    P.product_name, 
+    SUM(O.quantity) AS total_quantity
+FROM 
+    PRODUCTS P
+JOIN 
+    ORDER_DETAILS O ON P.product_id = O.product_id
+GROUP BY 
+    P.product_name
+HAVING 
+    SUM(O.quantity) > 5;
+4) Query: Find employees who report to the same manager, and count how many report to each.
+SELECT 
+    manager_id, 
+    COUNT(employee_id) AS num_employees
+FROM 
+    EMPLOYEE
+WHERE 
+    manager_id IS NOT NULL
+GROUP BY 
+    manager_id
+ORDER BY 
+    num_employees DESC;
+5) Query: List each course and the number of students enrolled in it.
+SELECT 
+    C.course_name, 
+    COUNT(E.student_id) AS enrolled_students
+FROM 
+    COURSES C
+JOIN 
+    ENROLLMENTS E ON C.course_id = E.course_id
+GROUP BY 
+    C.course_name
+ORDER BY 
+    enrolled_students DESC;
