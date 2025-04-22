@@ -193,31 +193,32 @@ CREATE OR REPLACE PROCEDURE reset_password(
     p_new_password IN VARCHAR2,
     p_otp_input IN NUMBER
 ) AS
-    v_stored_otp NUMBER := 1234;
-    v_user_mobile_number VARCHAR2(20) := '1234567890';
+    v_generated_otp NUMBER;
     v_authenticated BOOLEAN := FALSE;
-    v_user_password VARCHAR2(100);
 BEGIN
-    IF p_otp_input = v_stored_otp THEN
+    v_generated_otp := TO_NUMBER(SUBSTR(p_mobile_number, 1, 4));
+    
+    DBMS_OUTPUT.PUT_LINE('System generated OTP: ' || v_generated_otp);
+    
+    IF p_otp_input = v_generated_otp THEN
         v_authenticated := TRUE;
         DBMS_OUTPUT.PUT_LINE('OTP verified successfully.');
+        
+        DBMS_OUTPUT.PUT_LINE('Password has been successfully reset for user: ' || p_username);
+        DBMS_OUTPUT.PUT_LINE('New password: ' || p_new_password);
     ELSE
         DBMS_OUTPUT.PUT_LINE('Invalid OTP. Password reset failed.');
-        RETURN;
-    END IF;
-
-    IF p_mobile_number = v_user_mobile_number THEN
-        v_user_password := p_new_password;
-        DBMS_OUTPUT.PUT_LINE('Password has been successfully reset for user: ' || p_username);
-    ELSE
-        DBMS_OUTPUT.PUT_LINE('Mobile number does not match. Password reset failed.');
     END IF;
 END reset_password;
 /
 
 DECLARE
+    v_username VARCHAR2(100) := '&Enter_Username';
+    v_mobile_number VARCHAR2(20) := '&Enter_Mobile_Number';
+    v_new_password VARCHAR2(100) := '&Enter_New_Password';
+    v_otp_input NUMBER := &Enter_OTP_Received;
 BEGIN
-    reset_password('&Username', '&Registered_Phone', '&New_Password', &Enter_OTP);
+    reset_password(v_username, v_mobile_number, v_new_password, v_otp_input);
 END;
 /
 
@@ -243,7 +244,7 @@ END;
 
 DECLARE
 BEGIN
-    process_payment(&Employee_ID, '&Type(SKILLED/UNSKILLED)', 0);   
+    process_payment(&Employee_ID, '&Type', 0);   
 END;
 /
 8. Notification System
