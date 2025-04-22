@@ -1,4 +1,4 @@
-1) Query: List the full names of skilled employees along with their hostel names
+1) List the full names of skilled employees along with their hostel names
 SELECT 
     se.first_name || ' ' || se.last_name AS full_name,
     h.hostel_name
@@ -9,53 +9,65 @@ JOIN
 ORDER BY 
     h.hostel_name;
 
-2) Query: List customer names and their total number of orders placed, sorted by total orders descending.
+2. Total number of skilled and unskilled employees assigned per hostel (JOIN + GROUP BY + COUNT)
 SELECT 
-    C.customer_name, 
-    COUNT(O.order_id) AS total_orders
+    H.hostel_name,
+    COUNT(DISTINCT SE.employee_id) AS skilled_count,
+    COUNT(DISTINCT UE.employee_id) AS unskilled_count
 FROM 
-    CUSTOMERS C
-JOIN 
-    ORDERS O ON C.customer_id = O.customer_id
+    HOSTEL H
+LEFT JOIN 
+    Skilled_Employee SE ON H.hostel_number = SE.hostel_number
+LEFT JOIN 
+    Unskilled_Employee UE ON H.hostel_number = UE.hostel_number
 GROUP BY 
-    C.customer_name
+    H.hostel_name
 ORDER BY 
-    total_orders DESC;
+    skilled_count DESC;
 
-3) Query: Display product names that were ordered more than 5 times along with total quantity.
-
+3. Top 3 skilled employees with highest attendance percentage (JOIN + ORDER BY + ROWNUM / FETCH FIRST)
 SELECT 
-    P.product_name, 
-    SUM(O.quantity) AS total_quantity
+    SE.first_name || ' ' || SE.last_name AS employee_name,
+    SE.post,
+    SETR.attendance,
+    H.hostel_name
 FROM 
-    PRODUCTS P
+    Skilled_Employee SE
 JOIN 
-    ORDER_DETAILS O ON P.product_id = O.product_id
-GROUP BY 
-    P.product_name
-HAVING 
-    SUM(O.quantity) > 5;
-4) Query: Find employees who report to the same manager, and count how many report to each.
+    Skilled_Employee_Transaction SETR ON SE.employee_id = SETR.id_no
+JOIN 
+    HOSTEL H ON H.hostel_number = SE.hostel_number
+ORDER BY 
+    SETR.attendance DESC
+FETCH FIRST 3 ROWS ONLY;
+
+4. Count of students per hostel (JOIN + GROUP BY + ALIAS)
 SELECT 
-    manager_id, 
-    COUNT(employee_id) AS num_employees
+    H.hostel_name,
+    COUNT(S.roll_number) AS student_count
 FROM 
-    EMPLOYEE
+    HOSTEL H
+LEFT JOIN 
+    Student S ON H.hostel_number = S.hostel_number
+GROUP BY 
+    H.hostel_name
+ORDER BY 
+    student_count DESC;
+
+5. List students who stayed in the hostel for more than 25 days with their attendance (JOIN + WHERE + ORDER BY)
+SELECT 
+    S.roll_number, 
+    S.first_name || ' ' || S.last_name AS student_name,
+    ST.days_in_hostel,
+    ST.attendance,
+    H.hostel_name
+FROM 
+    Student S
+JOIN 
+    Student_Transaction ST ON S.roll_number = ST.roll_number
+JOIN 
+    HOSTEL H ON S.hostel_number = H.hostel_number
 WHERE 
-    manager_id IS NOT NULL
-GROUP BY 
-    manager_id
+    ST.days_in_hostel > 25
 ORDER BY 
-    num_employees DESC;
-5) Query: List each course and the number of students enrolled in it.
-SELECT 
-    C.course_name, 
-    COUNT(E.student_id) AS enrolled_students
-FROM 
-    COURSES C
-JOIN 
-    ENROLLMENTS E ON C.course_id = E.course_id
-GROUP BY 
-    C.course_name
-ORDER BY 
-    enrolled_students DESC;
+    ST.attendance DESC;
