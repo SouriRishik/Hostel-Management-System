@@ -1,4 +1,4 @@
-1. Hostel & Facility Management
+--1. Hostel & Facility Management
 
 CREATE OR REPLACE PROCEDURE manage_hostel(
     p_action VARCHAR2,
@@ -42,7 +42,7 @@ BEGIN
 END;
 /
 
-2. Employee Management
+--2. Employee Management
 
 CREATE OR REPLACE PROCEDURE manage_employee(
     p_type VARCHAR2,
@@ -88,7 +88,7 @@ BEGIN
 END;
 /
 
-3. Student In-Out Tracking
+--3. Student In-Out Tracking
 
 CREATE OR REPLACE FUNCTION track_student(
     p_roll NUMBER,
@@ -124,7 +124,7 @@ BEGIN
 END;
 /
 
-4. Visitor Management
+--4. Visitor Management
 
 CREATE OR REPLACE PROCEDURE log_visitor(
     p_name VARCHAR2,
@@ -150,7 +150,7 @@ END;
 /
 
 
-5. Transaction Reporting
+--5. Transaction Reporting
 
 CREATE OR REPLACE PROCEDURE generate_report(
     p_type VARCHAR2,
@@ -185,7 +185,7 @@ END;
 /
 
 
-6. User Authentication
+--6. User Authentication
 
 CREATE OR REPLACE PROCEDURE reset_password(
     p_username IN VARCHAR2,
@@ -223,7 +223,7 @@ END;
 /
 
 
-7. Payment Management
+--7. Payment Management
 
 CREATE OR REPLACE PROCEDURE process_payment(
     p_emp_id NUMBER,
@@ -247,7 +247,7 @@ BEGIN
     process_payment(&Employee_ID, '&Type', 0);   
 END;
 /
-8. Notification System
+--8. Notification System
 
 CREATE OR REPLACE FUNCTION send_reminder(
     p_type VARCHAR2,
